@@ -12,7 +12,7 @@ func main() {
 	// init client
 	client := v3_0.NewClient()
 
-	g.GET("v3/ping/params", func(c *gin.Context) {
+	g.GET("v3/ping/:params", func(c *gin.Context) {
 		p := c.Param("params")
 		out, params := client.Rpc("ping", p)
 		c.JSON(200, gin.H{
