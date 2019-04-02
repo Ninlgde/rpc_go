@@ -18,6 +18,7 @@ import (
 type V4Client struct {
 	conn    net.Conn
 	address string
+	sync.Mutex
 }
 
 type Discover struct {
@@ -89,8 +90,8 @@ func (discover *Discover) NewV4Client(key string, address string) {
 		log.Fatalf("did not connect: %v", err)
 	}
 	client := &V4Client{
-		conn,
-		address,
+		conn:    conn,
+		address: address,
 	}
 
 	discover.nodes[key] = client
@@ -102,16 +103,15 @@ func (discover *Discover) RemoveV4Client(key string) {
 	delete(discover.nodes, key)
 }
 
-func (discover *Discover) FindAvailableConn() (net.Conn, error) {
+func (discover *Discover) FindAvailableClient() (*V4Client, error) {
 	for retry := 5; retry > 0; retry-- {
 		discover.RLock()
 		names := discover.NodeNames()
 		node := names[rand.Int()%len(names)]
 		v4client := discover.nodes[node]
 		discover.RUnlock()
-		conn := v4client.conn
 		// 假设都是活的
-		return conn, nil
+		return v4client, nil
 	}
 	return nil, retryError{}
 }
@@ -123,7 +123,7 @@ type Client struct {
 type retryError struct{ error }
 
 func (c *Client) Rpc(in_ string, params string) (out string, result string) {
-	conn, err := c.discover.FindAvailableConn()
+	v4client, err := c.discover.FindAvailableClient()
 	if err != nil {
 		fmt.Printf("Fail to conn, %s\n", err)
 		return
@@ -136,12 +136,15 @@ func (c *Client) Rpc(in_ string, params string) (out string, result string) {
 	}
 	length_prefix := make([]byte, 4)
 	binary.LittleEndian.PutUint32(length_prefix, uint32(len(request)))
+	conn := v4client.conn
+	v4client.Lock()
 	conn.Write(length_prefix)
 	conn.Write(request)
 	conn.Read(length_prefix)
 	length := binary.LittleEndian.Uint32(length_prefix)
 	body := make([]byte, length)
 	conn.Read(body)
+	v4client.Unlock()
 	response := map[string]string{}
 	err2 := json.Unmarshal(body, &response)
 	if err2 != nil {
