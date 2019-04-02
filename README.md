@@ -2,6 +2,8 @@
 非常简单的分布式异步rpc server实现
 依赖etcd做服务发现
 
+添加了grpc的实现
+
 ## 安装
 1. Download and install it:
 
@@ -33,6 +35,9 @@ import "github.com/Ninlgde/rpc_go/v3.0"
     go run server_v3_main.go -port=8080
     go run server_v3_main.go -port=8081
     go run server_v3_main.go -port=8082
+    go run server_vgrpc_main.go -port=18080
+    go run server_vgrpc_main.go -port=18081
+    go run server_vgrpc_main.go -port=18082
     ```
     
 3. start http aip server
@@ -42,6 +47,10 @@ import "github.com/Ninlgde/rpc_go/v3.0"
     
 4. go and test
     
-    http://localhost:8888/ping/helloworld
+    http://localhost:8888/v3/ping/helloworld
     
-    http://localhost:8888/pi/1000
+    http://localhost:8888/vgrpc/ping/helloworld
+    
+    http://localhost:8888/v3/pi/1000
+    
+    http://localhost:8888/vgrpc/pi/1000

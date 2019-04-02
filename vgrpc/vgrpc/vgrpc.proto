@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package vgrpc;
+
+// pi service
+service GrpcService {
+	// pi method
+	rpc PiCalc(PiRequest) returns (PiResponse) {}
+	rpc PingCalc(PingRequest) returns (PingResponse) {}
+}
+
+// pi input
+message PiRequest {
+	int32 n = 1;
+}
+
+// pi output
+message PiResponse {
+    string out = 1;
+	double value = 2;
+}
+
+// pi input
+message PingRequest {
+	string params = 1;
+}
+
+// pi output
+message PingResponse {
+    string out = 1;
+	string result = 2;
+}

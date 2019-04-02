@@ -77,7 +77,7 @@ func (discover *Discover) Watch() {
 	}
 }
 
-func (discover *Discover) FindAvailableConn() net.Conn {
+func (discover *Discover) FindAvailableConn() (net.Conn, error) {
 	for retry := 5; retry > 0; retry-- {
 		discover.RLock()
 		names := discover.NodeNames()
@@ -89,17 +89,23 @@ func (discover *Discover) FindAvailableConn() net.Conn {
 			fmt.Printf("Fail to connect %s, %s\n", address, err)
 			continue
 		}
-		return conn
+		return conn, nil
 	}
-	return nil
+	return nil, retryError{}
 }
 
 type Client struct {
 	discover *Discover
 }
 
+type retryError struct{ error }
+
 func (c *Client) Rpc(in_ string, params string) (out string, result string) {
-	conn := c.discover.FindAvailableConn()
+	conn, err := c.discover.FindAvailableConn()
+	if err != nil {
+		fmt.Printf("Fail to conn, %s\n", err)
+		return
+	}
 	defer conn.Close()
 	m := map[string]string{"in": in_, "params": params}
 	request, err := json.Marshal(m)
