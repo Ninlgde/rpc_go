@@ -1,10 +1,10 @@
 package v1_0
 
 import (
-	"net"
-	"fmt"
+	"encoding/binary"
 	"encoding/json"
-	"strconv"
+	"fmt"
+	"net"
 )
 
 type Server struct {
@@ -12,17 +12,18 @@ type Server struct {
 	Handlers map[string]func(conn net.Conn, params string)
 }
 
-func handler_conn(conn net.Conn, addr net.Addr, handlers map[string]func(conn net.Conn, params string))  {
+func handler_conn(conn net.Conn, addr net.Addr, handlers map[string]func(conn net.Conn, params string)) {
 	fmt.Println(addr.String(), "comes")
 	for {
-		length_prefix := make([]byte, 2)
+		length_prefix := make([]byte, 4)
 		n, _ := conn.Read(length_prefix)
 		if n == 0 {
 			fmt.Println(addr.String(), "bye")
 			conn.Close()
 			return
 		}
-		length, _ := strconv.Atoi(string(length_prefix[:]))
+		//length, _ := strconv.Atoi(string(length_prefix[:]))
+		length := binary.LittleEndian.Uint32(length_prefix)
 		body := make([]byte, length)
 		conn.Read(body)
 		response := map[string]string{}
@@ -39,7 +40,7 @@ func handler_conn(conn net.Conn, addr net.Addr, handlers map[string]func(conn ne
 	}
 }
 
-func (s *Server)Loop() {
+func (s *Server) Loop() {
 	for {
 		conn, _ := s.Listener.Accept()
 		handler_conn(conn, conn.RemoteAddr(), s.Handlers)
@@ -51,14 +52,14 @@ func ping(conn net.Conn, params string) {
 }
 
 func sendresult(conn net.Conn, out string, params string) {
-	m := map[string]string{"out":out, "params": params}
+	m := map[string]string{"out": out, "result": params}
 	request, err := json.Marshal(m)
 	if err != nil {
 		fmt.Printf("Fail to marshal, %s\n", err)
 		return
 	}
-	length_prefix := make([]byte, 2)
-	length_prefix = []byte(strconv.Itoa(len(request)))
+	length_prefix := make([]byte, 4)
+	binary.LittleEndian.PutUint32(length_prefix, uint32(len(request)))
 	conn.Write(length_prefix)
 	conn.Write(request)
 }

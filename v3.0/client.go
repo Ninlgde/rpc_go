@@ -2,6 +2,7 @@ package v3_0
 
 import (
 	"context"
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"go.etcd.io/etcd/clientv3"
@@ -9,7 +10,6 @@ import (
 	"math/rand"
 	"net"
 	"os"
-	"strconv"
 	"sync"
 	"time"
 )
@@ -107,12 +107,12 @@ func (c *Client) Rpc(in_ string, params string) (out string, result string) {
 		fmt.Printf("Fail to marshal, %s\n", err)
 		return
 	}
-	length_prefix := make([]byte, 2)
-	length_prefix = []byte(strconv.Itoa(len(request)))
+	length_prefix := make([]byte, 4)
+	binary.LittleEndian.PutUint32(length_prefix, uint32(len(request)))
 	conn.Write(length_prefix)
 	conn.Write(request)
 	conn.Read(length_prefix)
-	length, _ := strconv.Atoi(string(length_prefix[:]))
+	length := binary.LittleEndian.Uint32(length_prefix)
 	body := make([]byte, length)
 	conn.Read(body)
 	response := map[string]string{}
@@ -121,7 +121,7 @@ func (c *Client) Rpc(in_ string, params string) (out string, result string) {
 		fmt.Printf("Fail to unmarshal, %s\n", err2)
 		return
 	}
-	return response["out"], response["params"]
+	return response["out"], response["result"]
 }
 
 func (c *Client) RpcStream(conn net.Conn, in_ string, params string) (out string, result string) {
@@ -131,12 +131,12 @@ func (c *Client) RpcStream(conn net.Conn, in_ string, params string) (out string
 		fmt.Printf("Fail to marshal, %s\n", err)
 		return
 	}
-	length_prefix := make([]byte, 2)
-	length_prefix = []byte(strconv.Itoa(len(request)))
+	length_prefix := make([]byte, 4)
+	binary.LittleEndian.PutUint32(length_prefix, uint32(len(request)))
 	conn.Write(length_prefix)
 	conn.Write(request)
 	conn.Read(length_prefix)
-	length, _ := strconv.Atoi(string(length_prefix[:]))
+	length := binary.LittleEndian.Uint32(length_prefix)
 	body := make([]byte, length)
 	conn.Read(body)
 	response := map[string]string{}
@@ -145,7 +145,7 @@ func (c *Client) RpcStream(conn net.Conn, in_ string, params string) (out string
 		fmt.Printf("Fail to unmarshal, %s\n", err2)
 		return
 	}
-	return response["out"], response["params"]
+	return response["out"], response["result"]
 }
 
 func NewClient() (client *Client) {
