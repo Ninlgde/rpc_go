@@ -19,7 +19,7 @@ import "github.com/Ninlgde/rpc_go/v3.0"
 1. start etcd
     * docker 
     ```sh
-    sudo docker run -p 2380:2380 -p 2379:2379 -v /etc/ssl/certs/:/etc/ssl/certs/ elcolio/etcd
+    sudo docker run -p 2379:2379 -v /etc/ssl/certs/:/etc/ssl/certs/ elcolio/etcd
     ```
     
     * macos
