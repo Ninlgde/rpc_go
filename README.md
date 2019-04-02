@@ -2,7 +2,8 @@
 非常简单的分布式异步rpc server实现
 依赖etcd做服务发现
 
-添加了grpc的实现
+* 添加了grpc的实现
+* 添加了v4客户端，类似stream？
 
 ## 安装
 1. Download and install it:

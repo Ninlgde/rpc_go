@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Ninlgde/rpc_go/v3.0"
+	"github.com/Ninlgde/rpc_go/v4"
 	"github.com/Ninlgde/rpc_go/vgrpc"
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +24,24 @@ func main() {
 	g.GET("v3/pi/:n", func(c *gin.Context) {
 		n := c.Param("n")
 		out, params := client.Rpc("pi", n)
+		c.JSON(200, gin.H{
+			out: params,
+		})
+	})
+
+	//init v4 client
+	v4client := v4_0.NewClient()
+
+	g.GET("v4/ping/:params", func(c *gin.Context) {
+		p := c.Param("params")
+		out, params := v4client.Rpc("ping", p)
+		c.JSON(200, gin.H{
+			out: params,
+		})
+	})
+	g.GET("v4/pi/:n", func(c *gin.Context) {
+		n := c.Param("n")
+		out, params := v4client.Rpc("pi", n)
 		c.JSON(200, gin.H{
 			out: params,
 		})
