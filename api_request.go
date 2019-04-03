@@ -30,7 +30,7 @@ func TestGet(version string) {
 }
 
 func main() {
-	//TestGet("v3")
 	//TestGet("vgrpc")
-	TestGet("v4")
+	//TestGet("v4")
+	TestGet("v5")
 }
