@@ -73,3 +73,9 @@ import "github.com/Ninlgde/rpc_go/v3.0"
     ```
     
 ## TODO
+
+- api server的错误码
+
+- 灰度发布
+
+- 心跳

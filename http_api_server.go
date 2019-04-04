@@ -16,7 +16,7 @@ func main() {
 	pprof.Register(g)
 
 	//init v5 client
-	client := v5_0.NewClient()
+	client := v5_0.NewClient("ping")
 
 	g.GET("v0/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{})
@@ -38,7 +38,7 @@ func main() {
 	})
 
 	//init v4 client
-	v4client := v4_0.NewClient()
+	v4client := v4_0.NewClient("ping")
 
 	g.GET("v4/ping/:params", func(c *gin.Context) {
 		p := c.Param("params")
@@ -56,7 +56,7 @@ func main() {
 	})
 
 	// init grpc client
-	gclient := vgrpc.NewClient()
+	gclient := vgrpc.NewClient("grpc_ping")
 
 	g.GET("vgrpc/ping/:params", func(c *gin.Context) {
 		p := c.Param("params")

@@ -154,19 +154,19 @@ func (c *Client) Rpc(in_ string, params string) (out string, result string) {
 	return response["out"], response["result"]
 }
 
-func NewClient() (client *Client) {
+func NewClient(watch string) (client *Client) {
 	dis := &Discover{
-		dir:   "ping",
+		dir:   watch,
 		nodes: make(map[string]*V4Client),
 	}
 	go dis.Watch()
 
-	for {
-		if len(dis.nodes) != 0 {
-			break
-		}
-		time.Sleep(500 * time.Millisecond) // sleep 0.5 s
-	}
+	//for {
+	//	if len(dis.nodes) != 0 {
+	//		break
+	//	}
+	//	time.Sleep(500 * time.Millisecond) // sleep 0.5 s
+	//}
 	client = &Client{dis}
 	return
 }

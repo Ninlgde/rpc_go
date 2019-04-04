@@ -129,19 +129,19 @@ type Client struct {
 	discover *Discover
 }
 
-func NewClient() (client *Client) {
+func NewClient(watch string) (client *Client) {
 	dis := &Discover{
-		dir:   "grpc_ping",
+		dir:   watch,
 		nodes: make(map[string]*GrpcClient),
 	}
 	go dis.Watch()
 
-	for {
-		if len(dis.nodes) != 0 {
-			break
-		}
-		time.Sleep(500 * time.Millisecond) // sleep 0.5 s
-	}
+	//for {
+	//	if len(dis.nodes) != 0 {
+	//		break
+	//	}
+	//	time.Sleep(500 * time.Millisecond) // sleep 0.5 s
+	//}
 	client = &Client{dis}
 	return
 }
