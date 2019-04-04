@@ -3,22 +3,22 @@
 连接池客户端
 
 ```sh
-π wrk master ❯ wrk -t144 -c3000 -d30s -T30s --latency http://127.0.0.1:8888/v5/pi/1000
+ π ~/Desktop/source/thirdOpenSource ❯ wrk -t144 -c3000 -d30s -T30s --latency http://127.0.0.1:8888/v5/pi/1000
 Running 30s test @ http://127.0.0.1:8888/v5/pi/1000
   144 threads and 3000 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.86ms    1.61ms  65.59ms   87.90%
-    Req/Sec    10.54k     2.70k   28.20k    85.22%
+    Latency     1.82ms    2.08ms 132.39ms   89.10%
+    Req/Sec    10.73k     5.14k   28.68k    75.70%
   Latency Distribution
-     50%    1.56ms
-     75%    2.48ms
-     90%    3.74ms
-     99%    7.21ms
-  575365 requests in 41.05s, 89.44MB read
-Requests/sec:  14015.37
-Transfer/sec:      2.18MB
+     50%    1.17ms
+     75%    2.41ms
+     90%    4.10ms
+     99%    9.45ms
+  759507 requests in 48.06s, 118.06MB read
+Requests/sec:  15804.51
+Transfer/sec:      2.46MB
 ```
-比grpc略慢。。回头调优
+比grpc---
 ```
 π wrk master ❯ wrk -t144 -c3000 -d30s -T30s --latency http://127.0.0.1:8888/vgrpc/pi/1000
 Running 30s test @ http://127.0.0.1:8888/vgrpc/pi/1000

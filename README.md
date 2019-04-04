@@ -51,10 +51,23 @@ import "github.com/Ninlgde/rpc_go/v3.0"
     
 4. go and test
     
-    http://localhost:8888/v3/ping/helloworld
+    - http://localhost:8888/v5/ping/helloworld
+    - http://localhost:8888/vgrpc/ping/helloworld
+    - http://localhost:8888/v5/pi/1000
+    - http://localhost:8888/vgrpc/pi/1000
     
-    http://localhost:8888/vgrpc/ping/helloworld
+5. benchmark
+
+    1. wrk install
     
-    http://localhost:8888/v3/pi/1000
+    ```git clone https://github.com/wg/wrk```
     
-    http://localhost:8888/vgrpc/pi/1000
+    ```make & make install```
+    2. go and test
+    
+    ```
+    wrk -t144 -c3000 -d30s -T30s --latency http://127.0.0.1:8888/v4/pi/10000
+    wrk -t144 -c3000 -d30s -T30s --latency http://127.0.0.1:8888/v5/pi/10000
+    wrk -t144 -c3000 -d30s -T30s --latency http://127.0.0.1:8888/vgrpc/pi/10000
+    ```
+    
