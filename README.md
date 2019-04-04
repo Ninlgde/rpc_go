@@ -4,6 +4,9 @@
 
 * 添加了grpc的实现
 * 添加了v4客户端，类似stream？
+* 添加了v5客户端，链接池
+
+~~造轮子使我快乐~~
 
 ## 安装
 1. Download and install it:
