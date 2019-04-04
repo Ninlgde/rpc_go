@@ -4,6 +4,7 @@ import (
 	"github.com/Ninlgde/rpc_go/v4"
 	"github.com/Ninlgde/rpc_go/v5"
 	"github.com/Ninlgde/rpc_go/vgrpc"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,8 +12,15 @@ func main() {
 	// init gin
 	g := gin.Default()
 
+	// pprof
+	pprof.Register(g)
+
 	//init v5 client
 	client := v5_0.NewClient()
+
+	g.GET("v0/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{})
+	})
 
 	g.GET("v5/ping/:params", func(c *gin.Context) {
 		p := c.Param("params")
