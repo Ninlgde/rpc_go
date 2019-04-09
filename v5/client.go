@@ -114,6 +114,9 @@ func (discover *Discover) FindAvailableClient() (*V4Client, error) {
 	for retry := 5; retry > 0; retry-- {
 		discover.RLock()
 		names := discover.NodeNames()
+		if len(names) == 0 {
+			break
+		}
 		node := names[rand.Int()%len(names)]
 		v4client := discover.nodes[node]
 		discover.RUnlock()

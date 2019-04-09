@@ -21,25 +21,24 @@ type maxError struct {
 }
 
 func NewPool(address string, min, max int) (pool *Pool) {
+	pool = &Pool{
+		min:     min,
+		max:     max,
+		busy:    make(map[net.Conn]struct{}),
+		address: address,
+	}
 	conns := make([]net.Conn, min)
 	cap := 0
 	for cap < min {
-		conn, err := net.Dial("tcp", address)
+		conn, err := pool.newConn()
 		if err != nil {
-			fmt.Println("Fail to create conn ", err)
 			continue
 		}
 		conns[cap] = conn
 		cap++
 	}
-	pool = &Pool{
-		min:     min,
-		max:     max,
-		cap:     min,
-		conns:   conns,
-		busy:    make(map[net.Conn]struct{}),
-		address: address,
-	}
+	pool.cap = cap
+	pool.conns = conns
 	return
 }
 
