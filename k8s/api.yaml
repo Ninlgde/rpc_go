@@ -1,25 +1,25 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: api-deployment
+  name: apis-deployment
   labels:
-    app: api
+    app: apis
 spec:
   selector:
     matchLabels:
-      app: api
+      app: apis
   replicas: 1
   template:
     metadata:
       labels:
-        app: api
+        app: apis
     spec:
       containers:
-      - name: api
-        image: local/api
+      - name: apis
+        image: local/apis
         imagePullPolicy: Never
         ports:
-        - name: api-service
+        - name: apis-service
           containerPort: 3000
 
 ---
@@ -27,11 +27,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-service
+  name: apis-service
 spec:
   type: NodePort
   selector:
-    app: api
+    app: apis
   ports:
   - port: 3000
-    targetPort: api-service
+    targetPort: apis-service
