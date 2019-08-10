@@ -73,11 +73,15 @@ import "github.com/Ninlgde/rpc_go/v3.0"
     ```
     
 ## Run on k8s(minikube)
+
 run rpc server on minikube
+
 fork from: https://github.com/tinrab/kubernetes-go-grpc-tutorial.git
 
 1. build pb
-   ```protoc -I . --go_out=plugins=grpc:. *.proto```
+   ```
+   protoc -I . --go_out=plugins=grpc:. *.proto
+   ```
    
 2. build docker file
    ```
