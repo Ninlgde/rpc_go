@@ -72,6 +72,32 @@ import "github.com/Ninlgde/rpc_go/v3.0"
     wrk -t144 -c3000 -d30s -T30s --latency http://127.0.0.1:8888/vgrpc/pi/10000
     ```
     
+## Run on k8s(minikube)
+run rpc server on minikube
+fork from: https://github.com/tinrab/kubernetes-go-grpc-tutorial.git
+
+1. build pb
+   ```protoc -I . --go_out=plugins=grpc:. *.proto```
+   
+2. build docker file
+   ```
+   docker build -t local/service -f Dockerfile.service .
+   docker build -t local/apis -f Dockerfile.apis .
+   ```
+   
+3. apply yaml
+   ```
+   kubectl apply -f calc.yaml
+   kubectl apply -f api.yaml
+   ```
+
+4. test
+   ```
+   curl $(minikube service api-service --url)/ping/hello
+   curl $(minikube service api-service --url)/pi/20000
+   curl $(minikube service api-service --url)/gcd/333/653
+   ```
+    
 ## TODO
 
 - api server的错误码
