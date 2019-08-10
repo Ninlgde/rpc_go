@@ -78,9 +78,14 @@ run rpc server on minikube
 
 fork from: https://github.com/tinrab/kubernetes-go-grpc-tutorial.git
 
+0. cd k8s
+   ```
+   cd k8s
+   ```
+
 1. build pb
    ```
-   protoc -I . --go_out=plugins=grpc:. *.proto
+   protoc -I . --go_out=plugins=grpc:./pb ./pb/*.proto
    ```
    
 2. build docker file
