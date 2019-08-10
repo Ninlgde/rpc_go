@@ -1,0 +1,35 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: calc-deployment
+  labels:
+    app: calc
+spec:
+  selector:
+    matchLabels:
+      app: calc
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: calc
+    spec:
+      containers:
+      - name: calc
+        image: local/service
+        imagePullPolicy: Never
+        ports:
+        - name: calc-service
+          containerPort: 3000
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: calc-service
+spec:
+  selector:
+    app: calc
+  ports:
+  - port: 3000
+    targetPort: calc-service

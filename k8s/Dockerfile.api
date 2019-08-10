@@ -1,0 +1,16 @@
+FROM golang:latest
+
+WORKDIR github.com/Ninlgde/rpc_go/k8s
+COPY apiserver .
+COPY pb ./pb
+
+ENV GO111MODULE on
+ENV GOPROXY https://goproxy.io
+
+RUN go mod init github.com/Ninlgde/rpc_go/k8s
+RUN go mod download
+RUN go build
+
+EXPOSE 3000
+
+CMD [ "./k8s" ]

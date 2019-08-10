@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package k8s;
+
+// pi service
+service GrpcService {
+	// pi method
+	rpc PiCalc(PiRequest) returns (PiResponse) {}
+	rpc PingCalc(PingRequest) returns (PingResponse) {}
+	rpc GCDCalc(GCDRequest) returns (GCDResponse) {}
+}
+
+// pi input
+message PiRequest {
+	int32 n = 1;
+}
+
+// pi output
+message PiResponse {
+    string out = 1;
+	double value = 2;
+}
+
+// pi input
+message PingRequest {
+	string params = 1;
+}
+
+// pi output
+message PingResponse {
+    string out = 1;
+	string result = 2;
+}
+
+message GCDRequest {
+	uint64 a = 1;
+	uint64 b = 2;
+}
+
+message GCDResponse {
+	uint64 result = 1;
+}
